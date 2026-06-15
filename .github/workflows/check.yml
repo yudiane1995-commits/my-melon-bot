@@ -1,0 +1,23 @@
+name: Check Ticket
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/5 * * * *'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npm start
+        env:
+          MELON_EVENT_ID: ${{ secrets.MELON_EVENT_ID }}
+          NOTIFIER_TELEGRAM_TOKEN: ${{ secrets.NOTIFIER_TELEGRAM_TOKEN }}
+          NOTIFIER_TELEGRAM_CHAT_ID: ${{ secrets.NOTIFIER_TELEGRAM_CHAT_ID }}
+
